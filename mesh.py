@@ -2285,6 +2285,9 @@ def output_3d_photo(verts, colors, faces, Height, Width, hFov, vFov, tgt_poses, 
             video_basename = video_basename[0]
         path = os.path.join(output_dir, video_basename + '_' + video_traj_type + '.jpg')
         stereo = cv2.hconcat(stereos)
+        if (stereo.shape[0] % 2) != 0:
+            line = img[-1:]
+            stereo = cv2.vconcat([stereo, line])
         cv2.imwrite(path, stereo)
 
         # atop = 0; abuttom = img.shape[0] - img.shape[0] % 2; aleft = 0; aright = img.shape[1] - img.shape[1] % 2
