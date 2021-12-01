@@ -2199,7 +2199,7 @@ def output_3d_photo(verts, colors, faces, Height, Width, hFov, vFov, tgt_poses, 
                                     colors,
                                     canvas_size=canvas_size,
                                     factor=init_factor,
-                                    bgcolor='gray',
+                                    bgcolor='black',
                                     proj='perspective')
     else:
         normal_canvas.reinit_mesh(verts, faces, colors)
@@ -2281,15 +2281,21 @@ def output_3d_photo(verts, colors, faces, Height, Width, hFov, vFov, tgt_poses, 
         else:
             atop = 0; abuttom = img.shape[0] - img.shape[0] % 2; aleft = 0; aright = img.shape[1] - img.shape[1] % 2
         """
-        atop = 0; abuttom = img.shape[0] - img.shape[0] % 2; aleft = 0; aright = img.shape[1] - img.shape[1] % 2
-        crop_stereos = []
-        for stereo in stereos:
-            crop_stereos.append((stereo[atop:abuttom, aleft:aright, :3] * 1).astype(np.uint8))
-            stereos = crop_stereos
-        clip = ImageSequenceClip(stereos, fps=config['fps'])
         if isinstance(video_basename, list):
             video_basename = video_basename[0]
-        clip.write_videofile(os.path.join(output_dir, video_basename + '_' + video_traj_type + '.mp4'), fps=config['fps'])
+        path = os.path.join(output_dir, video_basename + '_' + video_traj_type + '.jpg')
+        stereo = cv2.hconcat(stereos)
+        cv2.imwrite(path, stereo)
+
+        # atop = 0; abuttom = img.shape[0] - img.shape[0] % 2; aleft = 0; aright = img.shape[1] - img.shape[1] % 2
+        # crop_stereos = []
+        # for stereo in stereos:
+        #     crop_stereos.append((stereo[atop:abuttom, aleft:aright, :3] * 1).astype(np.uint8))
+        #     stereos = crop_stereos
+        # clip = ImageSequenceClip(stereos, fps=config['fps'])
+        # if isinstance(video_basename, list):
+        #     video_basename = video_basename[0]
+        # clip.write_videofile(os.path.join(output_dir, video_basename + '_' + video_traj_type + '.mp4'), fps=config['fps'])
 
 
 
